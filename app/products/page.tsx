@@ -1,17 +1,23 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import { motion } from "framer-motion"
-import { Search, Grid, List, SlidersHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Header } from "@/components/header"
-import { ProductCard } from "@/components/product-card"
-import { ProductFilters } from "@/components/product-filters"
-import { mockProducts } from "@/lib/mock-data"
-import type { Product, Filter } from "@/lib/types"
+import { useState, useMemo, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Search, Grid, List, SlidersHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Header } from "@/components/header";
+import { ProductCard } from "@/components/product-card";
+import { ProductFilters } from "@/components/product-filters";
+import { mockProducts } from "@/lib/mock-data";
+import type { Product, Filter } from "@/lib/types";
 
 const initialFilters: Filter = {
   priceRange: [0, 1000],
@@ -21,111 +27,219 @@ const initialFilters: Filter = {
   inStock: false,
   sizes: [],
   colors: [],
+};
+
+function renderPagination(
+  currentPage: number,
+  totalPages: number,
+  onPageChange: (page: number) => void
+) {
+  const pagesToShow: (number | string)[] = [];
+
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) {
+      pagesToShow.push(i);
+    }
+  } else {
+    pagesToShow.push(1);
+
+    if (currentPage > 3) {
+      pagesToShow.push("start-ellipsis");
+    }
+
+    const startPage = Math.max(2, currentPage - 1);
+    const endPage = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pagesToShow.push(i);
+    }
+
+    if (currentPage < totalPages - 2) {
+      pagesToShow.push("end-ellipsis");
+    }
+
+    pagesToShow.push(totalPages);
+  }
+
+  return (
+    <div className="flex justify-center mt-8 space-x-1 flex-wrap">
+      {/* Prev Button */}
+      <Button
+        size="sm"
+        variant="outline"
+        disabled={currentPage === 1}
+        onClick={() => onPageChange(currentPage - 1)}
+      >
+        Prev
+      </Button>
+
+      {pagesToShow.map((page, index) =>
+        typeof page === "number" ? (
+          <Button
+            key={index}
+            size="sm"
+            variant={currentPage === page ? "default" : "outline"}
+            onClick={() => onPageChange(page)}
+          >
+            {page}
+          </Button>
+        ) : (
+          <span
+            key={index}
+            className="px-2 py-1 text-muted-foreground select-none"
+          >
+            ...
+          </span>
+        )
+      )}
+
+      {/* Next Button */}
+      <Button
+        size="sm"
+        variant="outline"
+        disabled={currentPage === totalPages}
+        onClick={() => onPageChange(currentPage + 1)}
+      >
+        Next
+      </Button>
+    </div>
+  );
 }
 
-export default function ProductsPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filters, setFilters] = useState<Filter>(initialFilters)
-  const [sortBy, setSortBy] = useState("featured")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [wishlist, setWishlist] = useState<number[]>([])
 
+export default function ProductsPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState<Filter>(initialFilters);
+  const [sortBy, setSortBy] = useState("featured");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [wishlist, setWishlist] = useState<number[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
   const filteredAndSortedProducts = useMemo(() => {
     const filtered = mockProducts.filter((product) => {
       // Search query
-      if (searchQuery && !product.name.toLowerCase().includes(searchQuery.toLowerCase())) {
-        return false
+      if (
+        searchQuery &&
+        !product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ) {
+        return false;
       }
 
       // Price range
-      if (product.price < filters.priceRange[0] || product.price > filters.priceRange[1]) {
-        return false
+      if (
+        product.price < filters.priceRange[0] ||
+        product.price > filters.priceRange[1]
+      ) {
+        return false;
       }
 
       // Categories
-      if (filters.categories.length > 0 && !filters.categories.includes(product.category)) {
-        return false
+      if (
+        filters.categories.length > 0 &&
+        !filters.categories.includes(product.category)
+      ) {
+        return false;
       }
 
       // Brands
-      if (filters.brands.length > 0 && !filters.brands.includes(product.brand)) {
-        return false
+      if (
+        filters.brands.length > 0 &&
+        !filters.brands.includes(product.brand)
+      ) {
+        return false;
       }
 
       // Rating
       if (filters.rating > 0 && product.rating < filters.rating) {
-        return false
+        return false;
       }
 
       // Stock
       if (filters.inStock && !product.inStock) {
-        return false
+        return false;
       }
 
       // Sizes
       if (filters.sizes.length > 0) {
-        const productSizes = product.variants.sizes || []
+        const productSizes = product.variants.sizes || [];
         if (!filters.sizes.some((size) => productSizes.includes(size))) {
-          return false
+          return false;
         }
       }
 
       // Colors
       if (filters.colors.length > 0) {
-        const productColors = product.variants.colors?.map((c) => c.name) || []
+        const productColors = product.variants.colors?.map((c) => c.name) || [];
         if (!filters.colors.some((color) => productColors.includes(color))) {
-          return false
+          return false;
         }
       }
 
-      return true
-    })
+      return true;
+    });
 
     // Sort products
     switch (sortBy) {
       case "price-low":
-        filtered.sort((a, b) => a.price - b.price)
-        break
+        filtered.sort((a, b) => a.price - b.price);
+        break;
       case "price-high":
-        filtered.sort((a, b) => b.price - a.price)
-        break
+        filtered.sort((a, b) => b.price - a.price);
+        break;
       case "rating":
-        filtered.sort((a, b) => b.rating - a.rating)
-        break
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
       case "newest":
-        filtered.sort((a, b) => b.id - a.id)
-        break
+        filtered.sort((a, b) => b.id - a.id);
+        break;
       default:
         // Featured - keep original order
-        break
+        break;
     }
 
-    return filtered
-  }, [searchQuery, filters, sortBy])
+    return filtered;
+  }, [searchQuery, filters, sortBy]);
 
   const handleAddToCart = (product: Product) => {
     // Add to cart logic
-    console.log("Added to cart:", product.name)
-  }
+    console.log("Added to cart:", product.name);
+  };
 
   const handleToggleWishlist = (product: Product) => {
-    setWishlist((prev) => (prev.includes(product.id) ? prev.filter((id) => id !== product.id) : [...prev, product.id]))
-  }
+    setWishlist((prev) =>
+      prev.includes(product.id)
+        ? prev.filter((id) => id !== product.id)
+        : [...prev, product.id]
+    );
+  };
 
   const clearFilters = () => {
-    setFilters(initialFilters)
-    setSearchQuery("")
-  }
-
+    setFilters(initialFilters);
+    setSearchQuery("");
+  };
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredAndSortedProducts.slice(startIndex, endIndex);
+  }, [filteredAndSortedProducts, currentPage]);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, searchQuery]);
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
           <h1 className="text-3xl font-bold mb-4">All Products</h1>
-          <p className="text-muted-foreground">Discover our complete collection of premium products</p>
+          <p className="text-muted-foreground">
+            Discover our complete collection of premium products
+          </p>
         </motion.div>
 
         {/* Search and Controls */}
@@ -185,13 +299,21 @@ export default function ProductsPage() {
             {/* Mobile Filters */}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="lg:hidden bg-transparent">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="lg:hidden bg-transparent"
+                >
                   <SlidersHorizontal className="h-4 w-4 mr-2" />
                   Filters
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-80">
-                <ProductFilters filters={filters} onFiltersChange={setFilters} onClearFilters={clearFilters} />
+                <ProductFilters
+                  filters={filters}
+                  onFiltersChange={setFilters}
+                  onClearFilters={clearFilters}
+                />
               </SheetContent>
             </Sheet>
           </div>
@@ -205,7 +327,11 @@ export default function ProductsPage() {
             transition={{ delay: 0.2 }}
             className="hidden lg:block"
           >
-            <ProductFilters filters={filters} onFiltersChange={setFilters} onClearFilters={clearFilters} />
+            <ProductFilters
+              filters={filters}
+              onFiltersChange={setFilters}
+              onClearFilters={clearFilters}
+            />
           </motion.div>
 
           {/* Products Grid */}
@@ -218,44 +344,66 @@ export default function ProductsPage() {
               className="flex items-center justify-between mb-6"
             >
               <p className="text-muted-foreground">
-                Showing {filteredAndSortedProducts.length} of {mockProducts.length} products
+                Showing {filteredAndSortedProducts.length} of{" "}
+                {mockProducts.length} products
               </p>
             </motion.div>
 
             {/* Products */}
             {filteredAndSortedProducts.length === 0 ? (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-16"
+              >
                 <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold mb-2">No products found</h3>
-                <p className="text-muted-foreground mb-6">Try adjusting your search or filters</p>
+                <h3 className="text-xl font-semibold mb-2">
+                  No products found
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  Try adjusting your search or filters
+                </p>
                 <Button onClick={clearFilters} variant="outline">
                   Clear Filters
                 </Button>
               </motion.div>
             ) : (
-              <div
-                className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" : "space-y-6"}
-              >
-                {filteredAndSortedProducts.map((product, index) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                  >
-                    <ProductCard
-                      product={product}
-                      onAddToCart={handleAddToCart}
-                      onToggleWishlist={handleToggleWishlist}
-                      isInWishlist={wishlist.includes(product.id)}
-                    />
-                  </motion.div>
-                ))}
-              </div>
+              <>
+                <div
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+                      : "space-y-6"
+                  }
+                >
+                  {paginatedProducts.map((product, index) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 + index * 0.1 }}
+                    >
+                      <ProductCard
+                        product={product}
+                        onAddToCart={handleAddToCart}
+                        onToggleWishlist={handleToggleWishlist}
+                        isInWishlist={wishlist.includes(product.id)}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Pagination Controls */}
+                {renderPagination(
+                  currentPage,
+                  Math.ceil(filteredAndSortedProducts.length / itemsPerPage),
+                  setCurrentPage
+                )}
+              </>
             )}
           </div>
         </div>
       </main>
     </div>
-  )
+  );
 }

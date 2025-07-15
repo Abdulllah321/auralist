@@ -7,12 +7,13 @@ import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header"
 import { Search, LayoutGrid, List } from "lucide-react"
 import clsx from "clsx"
+import Image from "next/image"
 
 const categories = [
   {
     id: 1,
     name: "Electronics",
-    icon: "📱",
+    icon: "/assets/headphones.jpeg",
     color: "from-blue-500 to-cyan-500",
     count: "2,547 items",
     description: "Latest gadgets and tech accessories",
@@ -21,7 +22,7 @@ const categories = [
   {
     id: 2,
     name: "Fashion",
-    icon: "👗",
+    icon: "/assets/fashion.jpeg",
     color: "from-pink-500 to-rose-500",
     count: "1,823 items",
     description: "Trendy clothing and accessories",
@@ -30,7 +31,7 @@ const categories = [
   {
     id: 3,
     name: "Home & Garden",
-    icon: "🏡",
+    icon: "/assets/Home-Garden.jpeg",
     color: "from-green-500 to-emerald-500",
     count: "956 items",
     description: "Everything for your home and garden",
@@ -39,7 +40,7 @@ const categories = [
   {
     id: 4,
     name: "Sports & Fitness",
-    icon: "⚽",
+    icon: "/assets/fitness.jpeg",
     color: "from-orange-500 to-red-500",
     count: "724 items",
     description: "Sports equipment and fitness gear",
@@ -48,7 +49,7 @@ const categories = [
   {
     id: 5,
     name: "Books & Media",
-    icon: "📚",
+    icon: "/assets/lifestyle.jpeg",
     color: "from-purple-500 to-indigo-500",
     count: "1,234 items",
     description: "Books, movies, and digital content",
@@ -57,7 +58,7 @@ const categories = [
   {
     id: 6,
     name: "Beauty & Health",
-    icon: "💄",
+    icon: "/assets/beauty.jpeg",
     color: "from-pink-500 to-purple-500",
     count: "687 items",
     description: "Beauty products and health essentials",
@@ -66,7 +67,7 @@ const categories = [
   {
     id: 7,
     name: "Automotive",
-    icon: "🚗",
+    icon: "/assets/automotive.jpeg",
     color: "from-gray-500 to-slate-600",
     count: "445 items",
     description: "Car accessories and automotive parts",
@@ -75,7 +76,7 @@ const categories = [
   {
     id: 8,
     name: "Toys & Games",
-    icon: "🎮",
+    icon: "/assets/toys.jpeg",
     color: "from-yellow-500 to-orange-500",
     count: "892 items",
     description: "Fun toys and games for all ages",
@@ -154,13 +155,18 @@ export default function CategoriesPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
                     className={clsx(
-                        "rounded-xl p-6 bg-gradient-to-r text-white shadow-md",
+                        "rounded-xl overflow-hidden bg-gradient-to-r text-white shadow-md flex flex-col gap-4",
                         category.color,
                         viewMode === "list" && "flex items-center gap-6"
                     )}
                 >
-                  <div className="text-4xl">{category.icon}</div>
-                  <div>
+                  <div className="text-4xl relative aspect-square">
+                    <Image
+                    fill
+                    className="object-cover"
+                    src={category.icon} alt={""}                    />
+                  </div>
+                  <div className="p-6">
                     <h2 className="text-2xl font-semibold">{category.name}</h2>
                     <p className="text-sm text-white/90">{category.description}</p>
                     <p className="text-sm mt-1">{category.count}</p>

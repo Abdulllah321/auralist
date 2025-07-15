@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { use } from "react"
 import {
   Heart,
   ShoppingCart,
@@ -23,13 +24,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Header } from "@/components/header"
 import { ProductCard } from "@/components/product-card"
 import { mockProducts, mockReviews } from "@/lib/mock-data"
+import Image from "next/image"
 
 interface ProductDetailPageProps {
   params: { id: string }
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const product = mockProducts.find((p) => p.id === Number.parseInt(params.id))
+export default function ProductDetailPage(props: ProductDetailPageProps) {
+  const { id } = use(props.params)
+  const product = mockProducts.find((p) => p.id === Number.parseInt(id))  
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [selectedSize, setSelectedSize] = useState("")
   const [selectedColor, setSelectedColor] = useState("")
@@ -81,7 +84,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   transition={{ duration: 0.3 }}
                   className="absolute inset-0 flex items-center justify-center text-8xl"
                 >
-                  {product.images[selectedImageIndex]}
+                  <Image src={product.images[selectedImageIndex]} alt={product.name} className="object-cover" fill/>
                 </motion.div>
               </AnimatePresence>
 
@@ -117,11 +120,11 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   <button
                     key={index}
                     onClick={() => setSelectedImageIndex(index)}
-                    className={`flex-shrink-0 w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-lg flex items-center justify-center text-2xl border-2 transition-colors ${
+                    className={`flex-shrink-0 overflow-hidden w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-lg flex items-center justify-center text-2xl border-2 transition-colors ${
                       selectedImageIndex === index ? "border-primary" : "border-transparent"
                     }`}
                   >
-                    {image}
+                    <Image src={image} alt={product.name} className="object-cover" width={80} height={80} />
                   </button>
                 ))}
               </div>

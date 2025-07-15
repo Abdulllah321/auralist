@@ -11,6 +11,7 @@ import { Header } from "@/components/header"
 import { mockProducts } from "@/lib/mock-data"
 import Link from "next/link"
 import type { Product, WishlistItem } from "@/lib/types"
+import Image from "next/image"
 
 // Mock wishlist data
 const initialWishlistItems: WishlistItem[] = [
@@ -116,8 +117,8 @@ export default function WishlistPage() {
                       <div className="flex items-start space-x-6">
                         {/* Product Image */}
                         <Link href={`/products/${item.product.id}`} className="flex-shrink-0">
-                          <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg flex items-center justify-center text-3xl hover:scale-105 transition-transform">
-                            {item.product.images[0]}
+                          <div className="w-24 h-24 bg-gradient-to-br relative from-orange-100 to-red-100 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg flex items-center justify-center text-3xl hover:scale-105 transition-transform">
+                            <Image fill src={item.product.images[0]} alt={item.product.name} className="object-cover"/>
                           </div>
                         </Link>
 

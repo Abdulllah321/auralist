@@ -1,27 +1,35 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Heart, ShoppingCart, Star, Eye } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
-import type { Product } from "@/lib/types"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Heart, ShoppingCart, Star, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import type { Product } from "@/lib/types";
+import Image from "next/image";
 
 interface ProductCardProps {
-  product: Product
-  onAddToCart: (product: Product) => void
-  onToggleWishlist: (product: Product) => void
-  isInWishlist: boolean
+  product: Product;
+  onAddToCart: (product: Product) => void;
+  onToggleWishlist: (product: Product) => void;
+  isInWishlist: boolean;
 }
 
-export function ProductCard({ product, onAddToCart, onToggleWishlist, isInWishlist }: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false)
+export function ProductCard({
+  product,
+  onAddToCart,
+  onToggleWishlist,
+  isInWishlist,
+}: ProductCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
 
   const discountPercentage = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 0
+    ? Math.round(
+        ((product.originalPrice - product.price) / product.originalPrice) * 100
+      )
+    : 0;
 
   return (
     <motion.div
@@ -34,32 +42,38 @@ export function ProductCard({ product, onAddToCart, onToggleWishlist, isInWishli
     >
       <Card className="overflow-hidden hover:shadow-xl transition-all duration-300">
         {/* Product Image */}
-        <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700">
+        <div className="relative aspect-square bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700">
           {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col space-y-1">
+          <div className="absolute top-3 left-3 flex flex-col space-y-1 z-10">
             {!product.inStock && (
               <Badge variant="destructive" className="text-xs">
                 Out of Stock
               </Badge>
             )}
             {discountPercentage > 0 && (
-              <Badge className="bg-primary text-primary-foreground text-xs">-{discountPercentage}%</Badge>
+              <Badge className="bg-primary text-primary-foreground text-xs">
+                -{discountPercentage}%
+              </Badge>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div className="absolute top-3 right-3 flex flex-col space-y-2">
+          <div className="absolute top-3 right-3 flex flex-col space-y-2 z-10">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => onToggleWishlist(product)}
               className={`p-2 rounded-full backdrop-blur-sm transition-all ${
                 isInWishlist
-                  ? "bg-red-500 text-white"
+                  ? "bg-red-500 text-white "
                   : "bg-white/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-300"
-              } ${isHovered ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+              } ${
+                isHovered ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              }`}
             >
-              <Heart className={`h-4 w-4 ${isInWishlist ? "fill-current" : ""}`} />
+              <Heart
+                className={`h-4 w-4 ${isInWishlist ? "fill-current" : ""}`}
+              />
             </motion.button>
 
             <motion.button
@@ -68,7 +82,6 @@ export function ProductCard({ product, onAddToCart, onToggleWishlist, isInWishli
               className={`p-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full text-gray-600 dark:text-gray-300 transition-all ${
                 isHovered ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               }`}
-              asChild
             >
               <Link href={`/products/${product.id}`}>
                 <Eye className="h-4 w-4" />
@@ -77,8 +90,13 @@ export function ProductCard({ product, onAddToCart, onToggleWishlist, isInWishli
           </div>
 
           {/* Product Image Placeholder */}
-          <div className="absolute inset-0 flex items-center justify-center text-6xl opacity-20">
-            {product.images[0]}
+          <div className="absolute inset-0 flex items-center justify-center text-6xl ">
+            <Image
+              fill
+              src={product.images[0]}
+              alt={product.name}
+              className="object-contain"
+            />{" "}
           </div>
         </div>
 
@@ -88,7 +106,9 @@ export function ProductCard({ product, onAddToCart, onToggleWishlist, isInWishli
             <Badge variant="secondary" className="text-xs">
               {product.brand}
             </Badge>
-            <span className="text-xs text-muted-foreground">{product.category}</span>
+            <span className="text-xs text-muted-foreground">
+              {product.category}
+            </span>
           </div>
 
           {/* Product Name */}
@@ -105,26 +125,36 @@ export function ProductCard({ product, onAddToCart, onToggleWishlist, isInWishli
                 <Star
                   key={i}
                   className={`h-4 w-4 ${
-                    i < Math.floor(product.rating) ? "text-yellow-400 fill-current" : "text-gray-300"
+                    i < Math.floor(product.rating)
+                      ? "text-yellow-400 fill-current"
+                      : "text-gray-300"
                   }`}
                 />
               ))}
             </div>
-            <span className="text-sm text-muted-foreground">({product.reviewCount})</span>
+            <span className="text-sm text-muted-foreground">
+              ({product.reviewCount})
+            </span>
           </div>
 
           {/* Price */}
           <div className="flex items-center space-x-2 mb-4">
-            <span className="text-2xl font-bold text-primary">${product.price}</span>
+            <span className="text-2xl font-bold text-primary">
+              ${product.price}
+            </span>
             {product.originalPrice && (
-              <span className="text-muted-foreground line-through">${product.originalPrice}</span>
+              <span className="text-muted-foreground line-through">
+                ${product.originalPrice}
+              </span>
             )}
           </div>
 
           {/* Stock Status */}
           {product.inStock && (
             <div className="text-sm text-green-600 mb-4">
-              {product.stockCount <= 5 ? `Only ${product.stockCount} left!` : "In Stock"}
+              {product.stockCount <= 5
+                ? `Only ${product.stockCount} left!`
+                : "In Stock"}
             </div>
           )}
 
@@ -142,5 +172,5 @@ export function ProductCard({ product, onAddToCart, onToggleWishlist, isInWishli
         </div>
       </Card>
     </motion.div>
-  )
+  );
 }

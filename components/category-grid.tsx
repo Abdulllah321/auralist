@@ -3,46 +3,47 @@
 import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
 import Link from "next/link"
+import Image from "next/image"
 
 const categories = [
   {
     name: "Electronics",
-    icon: "📱",
+    icon: "/assets/headphones.jpeg",
     color: "from-blue-500 to-cyan-500",
     href: "/products?category=electronics",
     count: "2.5k+ items",
   },
   {
     name: "Fashion",
-    icon: "👗",
+    icon: "/assets/fashion.jpeg",
     color: "from-pink-500 to-rose-500",
     href: "/products?category=fashion",
     count: "1.8k+ items",
   },
   {
     name: "Home & Garden",
-    icon: "🏡",
+    icon: "/assets/Home-Garden.jpeg",
     color: "from-green-500 to-emerald-500",
     href: "/products?category=home-garden",
     count: "950+ items",
   },
   {
     name: "Sports",
-    icon: "⚽",
+    icon: "/assets/fitness.jpeg",
     color: "from-orange-500 to-red-500",
     href: "/products?category=sports",
     count: "720+ items",
   },
   {
     name: "Books",
-    icon: "📚",
+    icon: "/assets/lifestyle.jpeg",
     color: "from-purple-500 to-indigo-500",
     href: "/products?category=books",
     count: "1.2k+ items",
   },
   {
     name: "Beauty",
-    icon: "💄",
+    icon: "/assets/beauty.jpeg",
     color: "from-pink-500 to-purple-500",
     href: "/products?category=beauty",
     count: "680+ items",
@@ -80,9 +81,13 @@ export function CategoryGrid() {
               <Link href={category.href}>
                 <Card className="p-6 text-center cursor-pointer group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-gradient-to-br from-background to-muted/30">
                   <div
-                    className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                    className={`w-16 relative overflow-hidden h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300 shadow-lg`}
                   >
-                    {category.icon}
+                    <Image
+                      fill 
+                      src={category.icon}
+                      alt=""
+                    />
                   </div>
                   <h3 className="font-semibold text-sm sm:text-base group-hover:text-primary transition-colors mb-2">
                     {category.name}
