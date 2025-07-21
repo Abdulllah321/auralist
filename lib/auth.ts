@@ -4,6 +4,18 @@ import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
 import GitHubProvider from "next-auth/providers/github"
 import { AuthAPI } from "./auth-api"
+import type { User } from "./auth-types";
+
+export interface NextUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  profileImage?: string | null;
+  role?: string | null;
+  isVerified?: boolean | null;
+  image?: string | null;
+}
+
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -84,9 +96,12 @@ export const authOptions: NextAuthOptions = {
           }
 
           // Call external API to create/update social user
-          const response = await AuthAPI.request("/auth/social-login", {
-            method: "POST",
-            body: JSON.stringify(userData),
+          const response = await AuthAPI.register({
+            name: user.name || "",
+            email: user.email || "",
+            profileImage: user.image,
+            provider: account?.provider,
+            providerId: account?.providerAccountId,
           })
 
           if (response.user) {

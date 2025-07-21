@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, ShoppingCart, User, Menu, X, ArrowLeft, Heart, Bell } from "lucide-react"
+import { Search, ShoppingCart, User, Menu, X, ArrowLeft, Heart, Bell, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
-import { useSession, signOut } from "next-auth/react"
+import { signOut } from "next-auth/react"
 
 interface HeaderProps {
   showBackButton?: boolean
@@ -29,7 +29,15 @@ export function Header({ showBackButton = false, title, cartItemCount = 2 }: Hea
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const { data: session } = useSession()
+  // const { data: session } = useSession()
+
+  const session ={ 
+    user: {
+      name: "John Doe",
+      email: "john.doe@example.com",
+      image: "https://via.placeholder.com/150",
+    },
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,11 +65,10 @@ export function Header({ showBackButton = false, title, cartItemCount = 2 }: Hea
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
-        isScrolled
+      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${isScrolled
           ? "bg-background/95 backdrop-blur-md shadow-lg supports-[backdrop-filter]:bg-background/60"
           : "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-      }`}
+        }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -78,10 +85,16 @@ export function Header({ showBackButton = false, title, cartItemCount = 2 }: Hea
             {title ? (
               <h1 className="text-xl font-semibold">{title}</h1>
             ) : (
-              <Link href="/">
-                <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-2">
-                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 shadow-lg" />
-                  <span className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+              <Link href="/" className="group">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="flex items-center gap-2"
+                >
+                  <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-500 shadow-lg transition duration-300 group-hover:shadow-xl">
+                    <ShoppingBag className="h-5 w-5 text-white" />
+                  </div>
+
+                  <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-orange-500 via-rose-500 to-orange-600 bg-clip-text text-transparent">
                     ModernStore
                   </span>
                 </motion.div>

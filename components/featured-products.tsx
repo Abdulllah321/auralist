@@ -4,45 +4,9 @@ import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Heart, ShoppingCart, Star } from "lucide-react"
+import { mockProducts } from "@/lib/mock-data"
+import Image from "next/image"
 
-const products = [
-  {
-    id: 1,
-    name: "Premium Wireless Headphones",
-    price: 299,
-    originalPrice: 399,
-    rating: 4.8,
-    reviews: 124,
-    badge: "Best Seller",
-  },
-  {
-    id: 2,
-    name: "Smart Fitness Watch",
-    price: 199,
-    originalPrice: 249,
-    rating: 4.6,
-    reviews: 89,
-    badge: "New",
-  },
-  {
-    id: 3,
-    name: "Minimalist Desk Lamp",
-    price: 79,
-    originalPrice: 99,
-    rating: 4.9,
-    reviews: 156,
-    badge: "Sale",
-  },
-  {
-    id: 4,
-    name: "Organic Cotton T-Shirt",
-    price: 29,
-    originalPrice: 39,
-    rating: 4.7,
-    reviews: 203,
-    badge: "Eco-Friendly",
-  },
-]
 
 export function FeaturedProducts() {
   return (
@@ -62,7 +26,7 @@ export function FeaturedProducts() {
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product, index) => (
+          {mockProducts.slice(0, 4).map((product, index) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 30 }}
@@ -73,7 +37,7 @@ export function FeaturedProducts() {
             >
               <Card className="group cursor-pointer overflow-hidden hover:shadow-xl transition-all duration-300">
                 {/* Product Image Placeholder */}
-                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700">
+                <div className="relative aspect-square bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700">
                   {product.badge && (
                     <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-medium">
                       {product.badge}
@@ -88,7 +52,13 @@ export function FeaturedProducts() {
                   </motion.button>
 
                   {/* Placeholder for product image */}
-                  <div className="absolute inset-0 flex items-center justify-center text-6xl opacity-20">📦</div>
+                  <div className="absolute inset-0 flex items-center justify-center text-6xl">
+                    <Image
+                      fill
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="object-contain"
+                    />{" "}                  </div>
                 </div>
 
                 <div className="p-6">
@@ -98,13 +68,12 @@ export function FeaturedProducts() {
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`h-4 w-4 ${
-                            i < Math.floor(product.rating) ? "text-yellow-400 fill-current" : "text-gray-300"
-                          }`}
+                          className={`h-4 w-4 ${i < Math.floor(product.rating) ? "text-yellow-400 fill-current" : "text-gray-300"
+                            }`}
                         />
                       ))}
                     </div>
-                    <span className="text-sm text-muted-foreground">({product.reviews})</span>
+                    <span className="text-sm text-muted-foreground">({product.reviewCount})</span>
                   </div>
 
                   {/* Product Name */}

@@ -10,6 +10,7 @@ export interface Product {
   category: string
   brand: string
   inStock: boolean
+  badge?: string
   stockCount: number
   variants: {
     sizes?: string[]

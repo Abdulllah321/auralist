@@ -14,6 +14,7 @@ export const mockProducts: Product[] = [
     category: "Electronics",
     brand: "AudioTech",
     inStock: true,
+    badge: "Best Seller",
     stockCount: 15,
     variants: {
       colors: [
@@ -52,6 +53,7 @@ export const mockProducts: Product[] = [
     brand: "FitTech",
     inStock: true,
     stockCount: 8,
+    badge: "New",
     variants: {
       sizes: ["38mm", "42mm", "46mm"],
       colors: [
@@ -86,6 +88,7 @@ export const mockProducts: Product[] = [
     category: "Home & Garden",
     brand: "LightCraft",
     inStock: true,
+    badge: "Sale",
     stockCount: 23,
     variants: {
       colors: [
@@ -118,6 +121,7 @@ export const mockProducts: Product[] = [
     category: "Fashion",
     brand: "EcoWear",
     inStock: true,
+    badge: "Eco-Friendly",
     stockCount: 45,
     variants: {
       sizes: ["XS", "S", "M", "L", "XL", "XXL"],
@@ -153,6 +157,7 @@ export const mockProducts: Product[] = [
     category: "Electronics",
     brand: "LensMaster",
     inStock: false,
+    badge: "Limited Stock",
     stockCount: 0,
     variants: {
       colors: [{ name: "Black", value: "#000000" }],
@@ -178,6 +183,7 @@ export const mockProducts: Product[] = [
     category: "Home & Garden",
     brand: "ComfortPro",
     inStock: true,
+    badge: "Best Seller",
     stockCount: 12,
     variants: {
       colors: [
@@ -212,6 +218,7 @@ export const mockProducts: Product[] = [
     category: "Electronics",
     brand: "VisionX",
     inStock: true,
+    badge: "New",
     stockCount: 9,
     variants: {
       sizes: ["43 inch", "55 inch", "65 inch"],
@@ -243,6 +250,7 @@ export const mockProducts: Product[] = [
     category: "Home & Garden",
     brand: "PureAir",
     inStock: true,
+    badge: "Best Seller",
     stockCount: 18,
     variants: {
       colors: [
@@ -276,6 +284,7 @@ export const mockProducts: Product[] = [
     category: "Electronics",
     brand: "KeyForge",
     inStock: true,
+    badge: "New",
     stockCount: 30,
     variants: {
       colors: [
@@ -309,6 +318,7 @@ export const mockProducts: Product[] = [
     category: "Beauty & Health",
     brand: "GlowSkin",
     inStock: true,
+    badge: "Best Seller",
     stockCount: 34,
     variants: {
       sizes: ["30ml", "50ml"],
@@ -340,6 +350,7 @@ export const mockProducts: Product[] = [
     category: "Toys & Games",
     brand: "TurboPlay",
     inStock: true,
+    badge: "New",
     stockCount: 20,
     variants: {
       colors: [
@@ -672,6 +683,7 @@ export const mockProducts: Product[] = [
     category: "Home & Garden",
     brand: "KitchenEase",
     inStock: true,
+    badge: "Best Seller",
     stockCount: 22,
     variants: {
       sizes: ["4L", "6L"],
@@ -706,6 +718,7 @@ export const mockProducts: Product[] = [
     category: "Electronics",
     brand: "GamerForge",
     inStock: true,
+    badge: "New",
     stockCount: 17,
     variants: {
       colors: [
