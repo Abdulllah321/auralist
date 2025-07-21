@@ -36,7 +36,7 @@ export function NewsletterSection() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <Card className="p-8 md:p-12 bg-gradient-to-br from-white to-muted/30 dark:from-gray-900 dark:to-gray-800/30 border-2 border-primary/10 shadow-xl">
+            <Card className="p-8 md:p-12 bg-gradient-to-br from-white to-muted/30 dark:from-neutral-900 dark:to-neutral-800/30 border-2 border-primary/10 shadow-xl">
               <div className="text-center mb-8">
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0] }}
